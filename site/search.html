@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search · Music Similarity Explorer</title>
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/search.css" />
+  <link rel="icon" type="image/png" href="/ico.png">
+</head>
+<body data-page="search">
+  <div id="siteHeader"></div>
+
+  <main>
+
+    <div class="container">
+      <section class="page-header page-header--large">
+        <span class="eyebrow">Search</span>
+        <h1>Find tracks by title, artist, or album</h1>
+        <p class="lead">Search across the catalog and open a track page to hear the audio, view the spectrogram, and explore recommendations.</p>
+      </section>
+
+      <section class="panel">
+        <div class="search-toolbar">
+          <div class="search-shell">
+            <input id="searchInput" class="search-input" type="text" placeholder="Start typing a song, artist, or album..." autocomplete="off" />
+            <div id="searchMeta" class="helper-text search-meta-text">Type at least 2 characters to search.</div>
+          </div>
+
+          <select id="sortSelect" class="sort-select">
+            <option value="title_asc">Title A–Z</option>
+            <option value="title_desc">Title Z–A</option>
+            <option value="artist_asc">Artist A–Z</option>
+            <option value="artist_desc">Artist Z–A</option>
+            <option value="album_asc">Album A–Z</option>
+            <option value="album_desc">Album Z–A</option>
+            <option value="genre_asc">Genre A–Z</option>
+            <option value="genre_desc">Genre Z–A</option>
+          </select>
+        </div>
+      </section>
+
+      <section id="resultsShell" class="panel hidden">
+        <div id="resultsHeader" class="helper-text hidden results-header"></div>
+        <div id="loadingState" class="loading-state hidden">Searching...</div>
+        <div id="emptyState" class="empty-state hidden">No results found.</div>
+        <div id="resultsGrid" class="result-list"></div>
+
+        <div id="pagination" class="pagination hidden list-pagination">
+          <button id="prevButton" class="page-button" type="button">Previous</button>
+          <button id="nextButton" class="page-button" type="button">Next</button>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <div id="siteFooter"></div>
+
+  <script src="js/site.js"></script>
+  <script src="js/search.js"></script>
+</body>
+</html>

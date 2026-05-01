@@ -1,0 +1,32 @@
+.search-meta-text {
+  margin-top: 0.85rem;
+}
+
+.results-header {
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.list-pagination {
+  margin-top: 1.25rem;
+}
+.page-header--large {
+  margin-bottom: 2rem;
+}
+
+.search-toolbar {
+  display: grid;
+  gap: 1rem;
+  align-items: start;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.search-shell {
+  min-width: 0;
+}
+
+@media (max-width: 980px) {
+  .search-toolbar {
+    grid-template-columns: 1fr;
+  }
+}

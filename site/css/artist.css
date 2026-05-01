@@ -1,0 +1,25 @@
+.detail-span-full {
+  grid-column: 1 / -1;
+}
+
+/* Albums laid out in compact columns */
+#albumsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+/* Keep album cards from stretching awkwardly */
+#albumsList .card {
+  height: 100%;
+  min-height: 0;
+  padding: 16px 18px;
+}
+
+/* Optional: slightly tighter title spacing for compact layout */
+#albumsList .card-title {
+  display: block;
+  line-height: 1.3;
+  word-break: break-word;
+}

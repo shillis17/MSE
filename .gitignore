@@ -1,0 +1,41 @@
+# Ignore all .log files
+*.log
+src/data_cleaning/clean_data/*.csv
+src/data_cleaning/raw_data/*.csv
+# -----------------
+# Python
+# -----------------
+__pycache__/
+*.py[cod]
+
+# App backend
+app/__pycache__/
+app/.venv/
+app/venv/
+app/model_artifacts/
+app/cache/
+app/*.npy
+app/*.index
+
+# Notebooks
+*.ipynb_checkpoints/
+
+# Env / secrets
+.env
+.env.*
+
+# Logs
+*.log
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.pem
+*.key

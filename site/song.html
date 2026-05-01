@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Song Detail · Music Similarity Explorer</title>
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/song.css" />
+  <link rel="icon" type="image/png" href="/ico.png">
+</head>
+<body data-page="">
+  <div id="siteHeader"></div>
+
+  <main>
+
+    <div class="container">
+      <section class="page-header">
+        <span class="eyebrow">Song Detail</span>
+        <h1 id="pageTitle">Loading song...</h1>
+        <p id="pageLead" class="lead">Track metadata, spectrogram, audio clip, and similar songs appear below.</p>
+      </section>
+
+      <div id="loadingState" class="panel loading-state">Loading song data...</div>
+      <div id="errorState" class="panel error-state hidden">Could not load this song.</div>
+
+      <div id="songLayout" class="detail-layout detail-layout--wide hidden">
+        <section class="panel">
+          <div class="entity-links" id="entityLinks"></div>
+          <h2 id="songTitle">Title</h2>
+          <div id="songArtist" class="lead song-artist"></div>
+          <div id="songGenres" class="genre-list song-genres"></div>
+
+          <div class="spec-wrap">
+            <div class="spectrogram-stage">
+              <img id="spectrogramImage" alt="Track spectrogram" />
+              <div id="spectrogramPlayhead" class="spectrogram-playhead hidden" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="audio-shell">
+            <audio id="audioPlayer" controls preload="none"></audio>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <h2>Track metadata</h2>
+          <div id="metaGrid" class="meta-grid"></div>
+        </aside>
+
+        <section class="panel detail-span-full">
+          <div class="similar-toolbar">
+            <h2 class="similar-heading">Similar songs</h2>
+
+            <div class="model-picker">
+              <a id="compareButton" class="button-secondary" href="#">Compare</a>
+              <label for="modelSelect" class="meta-label">Model</label>
+              <select id="modelSelect" class="model-select"></select>
+            </div>
+          </div>
+
+          <div id="similarList" class="result-list"></div>
+        </section>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="siteFooter"></div>
+
+  <script src="js/site.js"></script>
+  <script src="js/song.js"></script>
+</body>
+</html>

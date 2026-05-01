@@ -1,0 +1,116 @@
+
+A. Problem Statement & Motivation
+
+Finding new music that suits your tastes is a major difficulty for listeners in the large and constantly growing era of digital music. Although several commercial platforms have developed sophisticated recommendation algorithms, these algorithms are typically ineffective. There is a growing interest among academics and researchers in understanding the fundamental mechanisms of musical similarity and in investigating state-of-the-art recommendation algorithms. By developing and assessing a music similarity model, we hope to directly address this problem. 
+The community of music lovers interested in investigating music discovery beyond mainstream channels is the project's primary client/benefactor. We aim to enable these users to discover new artists and songs from the Free Music Archive (FMA), a vast and varied collection of non-commercial music, by developing a recommendation engine accessible to the general public. Providing a more transparent and varied music discovery experience, supporting the hobbyists, and carrying out thorough research and comparisons between different machine learning approaches and predictive models.
+There are a few prior studies on this topic that may help to inform our approach. For example, methods such as cosine similarity applied to audio data are frequently used in Content-Based Music Recommendation; this approach will serve as our baseline. Although it frequently fails to capture more complex associations, it is comparable to early recommendation systems. 
+We also plan to explore the Siamese Network, a more sophisticated method that uses deep learning to learn finer feature representations. By directly comparing these conventional techniques with contemporary Gen AI strategies, such as employing embeddings from Large Language Models and developing a multimodal model, this project sets itself apart. In the context of music similarity recommendation engine, this direct comparison is going to assess whether Gen AI's semantic comprehension can perform better than our audio-feature-based models.
+
+
+
+B. Data Strategy
+For this study, we will be using the Free Music Archive (FMA) dataset, which is accessible to the public. A large series of CSV files containing the data is supplied.
+
+Repository: https://github.com/mdeff/fma
+
+Dataset File Rows Columns File Size
+raw_tracks.csv 109,727 39 ~ 119KB
+raw_echonest.csv 14,512 250 ~ 47KB
+raw_artists.csv 16,916 25 ~ 13KB
+raw_albums.csv 15,234 19 ~ 23KB
+raw_genres.csv 164 5 ~ 6KB
+
+
+Features and Data Types
+The main part of our analysis will use the audio features provided in the raw_echonest.csv file, which are all numerical. 
+
+•acousticness: Confidence measure of whether the track is acoustic
+
+•danceability: How suitable a track is for dancing
+
+•energy: Perceptual measure of intensity and activity
+
+•instrumentalness: Predicts whether a track contains vocals or not
+
+•liveness: Identifies the presence of an audience in the recording 
+
+•speechiness: Detects the presence of words 
+
+•tempo: Estimated tempo and beats per minute
+
+•valence: Musical positiveness by track
+
+We will also use this data with categorical variables from other files, such as track_title, artist_name, and genre_title. There is no single predefined target variable; our goal is to generate a similarity score or ranking between tracks.
+
+
+
+
+Preprocessing Plan
+1. Data Merging: For convenience's sake, we will have the five CSV files combined into a single, cohesive dataset. This will provide a comprehensive overview of each track, including audio characteristics, artist details, and genre categorization.
+
+2. Missing Values: Because some of the tracks have the Echonest audio features, dealing with missing values will be a bit difficult/time consuming. Our approach will be to concentrate our modeling attempts on this subset of 14,512 tracks with full feature data. This will help ensure that every model is trained and analyzed using reliable data. 
+
+3. Normalization: To make sure the audio characteristics are on the same scale, we will perform Z-score normalization. Which will hopefully help us with neural network training and KNN in the long run.
+
+4. Categorical Encoding: In order to be in our models, categorical characteristics like genre will be one-hot encoded. For the gen AI models, we will also create textual descriptions by concatenating track metadata. For example, "Track: [title] by [artist], Genre: [genre], Energy: [value]").
+
+5. Data Splitting: The processed dataset will be divided into training (80%) and test (20%) sets.
+
+
+
+
+C. Technical Methodology
+1. Use pytorch to train a deep learning model on the data once it is validated and cleaned.
+2. Set up an AI powered similarity detection agent using openAI and mini gpt4.5
+3. Fine tune model parameters and system prompt for GPT bot
+4. Once weights and prompts are finlaized deploy models to AWS
+5. Integrate models into web application
+
+D. Evaluation & Metrics
+1. Compare similarity of AI model with deep learning model using a baseline model (TBD)
+2. Design system to score the similarity measurements so we can rank models and agents.
+3. Test model similarity by listening to songs outselves and see if we can feel the similarity "vibe" between the two.
+4. Research current models/algorithms for song reccomendation and see if/how they determine similarity
+
+
+
+
+E. Project Management
+
+Project Timeline
+
+Sprint 1: Foundation & Traditional ML
+Goals: Set up the foundation/infrastructure, prepare data.
+Key Tasks:
+• GitHub setup, development environment configuration, initial data loading
+• Database setup, data preprocessing pipeline
+• Implement baseline (Cosine Similarity) and KNN models
+• Implement Matrix Factorization and begin Siamese Network
+Deliverable: 
+• Working with traditional ML models with initial evaluation results
+• Data pipeline complete and ready for modeling
+
+
+Sprint 2: Advanced Models & Evaluation
+Goals: Begin learning models, implement gen AI approaches, and make an evaluation
+Key Tasks:
+• Complete Siamese Network training, begin LLM embeddings
+• Build an evaluation framework, run a comprehensive model comparison
+• Statistical analysis, begin application development
+Deliverable: 
+• All models are trained, and an evaluation report
+• Traditional ML models are complete
+
+
+Sprint 3: Deployment & Documentation
+Goals: Build and deploy an application, finalize documentation/report
+Key Tasks:
+• Backend API, Frontend,
+• AWS deployment 
+• Load testing, optimization
+• Final documentation, presentation preparation
+Deliverable: Live application on AWS, final report, presentation, and project complete
+
+
+
+

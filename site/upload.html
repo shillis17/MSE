@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Audio · Music Similarity Explorer</title>
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/upload.css" />
+  <link rel="icon" type="image/png" href="/ico.png">
+</head>
+<body data-page="uploads">
+  <div id="siteHeader"></div>
+
+  <main>
+
+    <div class="container upload-layout">
+      <section class="page-header">
+        <span class="eyebrow">Upload Audio</span>
+        <h1>Find similar songs from your own clip</h1>
+        <p class="lead">
+          Upload an audio file, choose a 30-second segment start, and compare the top matches returned by PANNs and CLAP.
+        </p>
+      </section>
+
+      <section class="panel upload-controls">
+
+        <div class="upload-row">
+          <label for="audioFile" class="meta-label">Audio file</label>
+          <div class="file-upload">
+            <input id="audioFile" class="file-input sr-only" type="file" accept=".mp3,.wav,.m4a,.flac,.ogg,audio/*" />
+            <label for="audioFile" class="file-upload-button">Choose audio file</label>
+            <span id="fileNameText" class="file-name-text">No file selected</span>
+          </div>
+        </div>
+
+        <div class="upload-row">
+          <audio id="previewPlayer" controls preload="metadata" class="hidden"></audio>
+        </div>
+
+        <div class="upload-row">
+          <label for="startSlider" class="meta-label">Choose you favorite part (30 seconds)</label>
+          <div class="slider-wrap">
+            <input id="startSlider" class="range-input" type="range" min="0" max="0" step="0.1" value="0" disabled />
+            <div id="timeReadout" class="time-readout">Start: 0:00 · End: 0:30</div>
+          </div>
+        </div>
+
+        <div class="upload-inline">
+          <button id="searchButton" class="button" type="button" disabled>Find similar songs</button>
+          <span id="statusText" class="status-text">Choose a file to begin.</span>
+        </div>
+
+        <div id="warningText" class="upload-warning hidden"></div>
+      </section>
+
+      <section id="queryPanel" class="panel hidden">
+        <h2>Selected query segment</h2>
+        <div class="query-summary">
+          <div id="queryFileName" class="card-meta"></div>
+          <div id="querySegment" class="card-meta"></div>
+        </div>
+      </section>
+
+      <section id="resultsPanel" class="hidden">
+        <div class="result-columns">
+          <article class="panel">
+            <h2>PANNs</h2>
+            <div id="pannsMeta" class="card-meta upload-model-meta"></div>
+            <div id="pannsList" class="result-list"></div>
+          </article>
+
+          <article class="panel">
+            <h2>CLAP</h2>
+            <div id="clapMeta" class="card-meta upload-model-meta"></div>
+            <div id="clapList" class="result-list"></div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <div id="siteFooter"></div>
+
+  <script src="js/site.js"></script>
+  <script src="js/upload.js"></script>
+</body>
+</html>

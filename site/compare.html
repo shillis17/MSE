@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compare Models · Music Similarity Explorer</title>
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/compare.css" />
+  <link rel="icon" type="image/png" href="/ico.png">
+</head>
+<body data-page="">
+  <div id="siteHeader"></div>
+
+  <main>
+
+    <div class="container">
+      <section class="page-header">
+        <span class="eyebrow">Model Comparison</span>
+        <h1 id="pageTitle">Loading track comparison...</h1>
+        <p id="pageLead" class="lead">Compare recommendation output from multiple similarity models for the same track.</p>
+        <div id="topActions" class="top-actions"></div>
+      </section>
+
+      <div id="loadingState" class="panel loading-state">Loading comparison data...</div>
+      <div id="errorState" class="panel error-state hidden">Could not load comparison data.</div>
+
+      <div id="compareLayout" class="hidden">
+        <section class="panel">
+          <div id="entityLinks" class="entity-links"></div>
+          <h2 id="songTitle">Title</h2>
+          <div id="songArtist" class="lead compare-song-artist"></div>
+          <div id="songGenres" class="genre-list compare-song-genres"></div>
+
+          <div class="spec-wrap">
+            <div class="spectrogram-stage">
+              <img id="spectrogramImage" alt="Track spectrogram" />
+              <div id="spectrogramPlayhead" class="spectrogram-playhead hidden" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="audio-shell">
+            <audio id="audioPlayer" controls preload="none"></audio>
+          </div>
+        </section>
+
+        <section class="panel compare-meta-panel">
+          <h2>Track metadata</h2>
+          <div id="metaGrid" class="meta-grid"></div>
+        </section>
+
+        <section class="compare-grid compare-results-grid">
+          <article class="panel">
+            <div class="compare-panel-header">
+              <div>
+                <h2 class="compare-heading">PANNs</h2>
+                <div id="pannsMeta" class="compare-meta"></div>
+              </div>
+              <span class="compare-model-badge">PANNs</span>
+            </div>
+            <div id="pannsList" class="result-list"></div>
+          </article>
+
+          <article class="panel">
+            <div class="compare-panel-header">
+              <div>
+                <h2 class="compare-heading">CLAP</h2>
+                <div id="clapMeta" class="compare-meta"></div>
+              </div>
+              <span class="compare-model-badge">CLAP</span>
+            </div>
+            <div id="clapList" class="result-list"></div>
+          </article>
+        </section>
+      </div>
+    </div>
+
+  </main>
+
+  <div id="siteFooter"></div>
+
+  <script src="js/site.js"></script>
+  <script src="js/compare.js"></script>
+</body>
+</html>

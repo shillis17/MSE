@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Albums · Music Similarity Explorer</title>
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/albums.css" />
+  <link rel="icon" type="image/png" href="/ico.png">
+</head>
+<body data-page="albums">
+  <div id="siteHeader"></div>
+
+  <main>
+
+    <div class="container">
+      <section class="page-header">
+        <span class="eyebrow">Album Browser</span>
+        <h1>Browse albums</h1>
+        <p class="lead">Alphabetized list of albums in the catalog.</p>
+      </section>
+
+      <section class="panel">
+        <div class="toolbar">
+          <input id="albumFilter" class="search-input" type="text" placeholder="Filter..." autocomplete="off" />
+          <select id="sortSelect" class="sort-select">
+            <option value="name_asc">Name A–Z</option>
+            <option value="name_desc">Name Z–A</option>
+            <option value="tracks_desc">Most tracks</option>
+            <option value="tracks_asc">Fewest tracks</option>
+          </select>
+          <div id="albumMeta" class="toolbar-meta">Loading albums...</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div id="loadingState" class="loading-state">Loading albums...</div>
+        <div id="errorState" class="error-state hidden">Could not load items.</div>
+        <div id="emptyState" class="empty-state hidden">No albums match this filter.</div>
+        <div id="albumsGrid" class="list-grid"></div>
+
+        <div class="pagination list-pagination">
+          <button id="prevButton" class="page-button" type="button">Previous</button>
+          <button id="nextButton" class="page-button" type="button">Next</button>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <div id="siteFooter"></div>
+
+  <script src="js/site.js"></script>
+  <script src="js/albums.js"></script>
+</body>
+</html>

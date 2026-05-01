@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pandas
+numpy
+boto3
+faiss-cpu
+librosa
+soundfile
+scikit-learn
+python-multipart
+transformers
+torch
+panns-inference

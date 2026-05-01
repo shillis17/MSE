@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genre Detail · Music Similarity Explorer</title>
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/genre.css" />
+  <link rel="icon" type="image/png" href="/ico.png">
+</head>
+<body data-page="genres">
+  <div id="siteHeader"></div>
+
+  <main>
+
+    <div class="container">
+      <section class="page-header">
+        <span class="eyebrow">Genre Detail</span>
+        <h1 id="pageTitle">Loading genre...</h1>
+        <p id="pageLead" class="lead">This page lists songs for the selected genre.</p>
+      </section>
+
+      <section class="panel">
+        <div class="toolbar">
+          <div class="search-shell">
+            <input id="trackFilter" class="search-input" type="text" placeholder="Filter songs in this genre..." autocomplete="off" />
+          </div>
+
+          <select id="sortSelect" class="sort-select">
+            <option value="title_asc">Title A–Z</option>
+            <option value="title_desc">Title Z–A</option>
+            <option value="artist_asc">Artist A–Z</option>
+            <option value="artist_desc">Artist Z–A</option>
+            <option value="album_asc">Album A–Z</option>
+            <option value="album_desc">Album Z–A</option>
+            <option value="genre_asc">Genre A–Z</option>
+            <option value="genre_desc">Genre Z–A</option>
+          </select>
+
+          <div id="toolbarMeta" class="toolbar-meta">Loading songs...</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div id="loadingState" class="loading-state">Loading songs...</div>
+        <div id="errorState" class="error-state hidden">Could not load songs for this genre.</div>
+        <div id="emptyState" class="empty-state hidden">No songs found for this genre.</div>
+        <div id="songsGrid" class="result-list"></div>
+
+        <div class="pagination list-pagination">
+          <button id="prevButton" class="page-button" type="button">Previous</button>
+          <button id="nextButton" class="page-button" type="button">Next</button>
+        </div>
+      </section>
+    </div>
+
+  </main>
+
+  <div id="siteFooter"></div>
+
+  <script src="js/site.js"></script>
+  <script src="js/genre.js"></script>
+</body>
+</html>

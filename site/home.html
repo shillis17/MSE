@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Music Similarity Explorer</title>
+  <link rel="stylesheet" href="css/shared.css" />
+  <link rel="stylesheet" href="css/home.css" />
+  <link rel="icon" type="image/png" href="/ico.png">
+</head>
+<body data-page="home">
+  <div id="siteHeader"></div>
+
+  <main>
+
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <span class="eyebrow">CSU Capstone Project</span>
+          <h1>Explore songs through learned similarity.</h1>
+          <p class="lead">
+            Browse the Free Music Archive catalog, search by title, artist, album, or genre, inspect spectrograms and 30-second clips,
+            compare recommendation models, and upload your own audio to search the catalog with PANNs and CLAP.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button" href="genres.html">Browse genres</a>
+            <a class="button-secondary" href="artists.html">Browse artists</a>
+            <a class="button-secondary" href="search.html">Search tracks</a>
+            <a class="button-secondary" href="upload.html">Start with uploads</a>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat">
+              <div class="stat-value">106,401</div>
+              <div class="stat-label">Tracks with similarity neighbors</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value">20</div>
+              <div class="stat-label">Nearest neighbors per query</div>
+            </div>
+            <div class="stat">
+              <div id="defaultModelStat" class="stat-value">PANNS</div>
+              <div class="stat-label">Default deployed model</div>
+            </div>
+            <div class="stat">
+              <div id="modelsStat" class="stat-value">PANNS, CLAP</div>
+              <div class="stat-label">Available recommendation models</div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero-panel">
+          <div>
+            <h2>Explore the site</h2>
+            <div class="result-list">
+              <article class="card card-tight">
+                <strong>Search</strong>
+                <div class="card-meta">Find tracks by title, artist, or album, then open song pages with audio, spectrograms, and recommendations.</div>
+              </article>
+              <article class="card card-tight">
+                <strong>Artists</strong>
+                <div class="card-meta">Browse artists alphabetically and open a single detail page with albums, genres, and all matching tracks.</div>
+              </article>
+              <article class="card card-tight">
+                <strong>Albums</strong>
+                <div class="card-meta">Browse albums alphabetically and inspect track lists, contributing artists, and combined genre information.</div>
+              </article>
+              <article class="card card-tight">
+                <strong>Genres</strong>
+                <div class="card-meta">Browse the genre index and open dedicated pages that filter songs within each genre collection.</div>
+              </article>
+              <article class="card card-tight">
+                <strong>Uploads</strong>
+                <div class="card-meta">Upload your own file, choose a 30-second segment, and compare top matches returned by both deployed models.</div>
+              </article>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div id="siteFooter"></div>
+
+  <script src="js/site.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
