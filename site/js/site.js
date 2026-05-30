@@ -1,7 +1,7 @@
 const SITE_CONFIG = {
-  API_BASE: "https://mu-9273f5d2d4b64326910d11d79bc6a898.ecs.us-east-1.on.aws",
+  //API_BASE: "https://d213pjntpngnti.cloudfront.net",
   
-  //API_BASE: "http://127.0.0.1:8000"
+  API_BASE: "http://127.0.0.1:8000"
 };
 
 const NAV_ITEMS = [
@@ -90,6 +90,32 @@ function normalizeTrack(track = {}) {
     artist_website: track.artist_website,
     track_url: track.track_url
   };
+}
+
+function normalizeModelOptions(models = []) {
+  if (!Array.isArray(models)) return [];
+
+  return models
+    .map((model) => {
+      if (typeof model === "string") {
+        return {
+          name: model,
+          label: model.toUpperCase()
+        };
+      }
+
+      if (model && typeof model === "object" && model.name) {
+        const name = String(model.name);
+        return {
+          name,
+          label: model.label ? String(model.label) : name.toUpperCase(),
+          upload_search_supported: Boolean(model.upload_search_supported)
+        };
+      }
+
+      return null;
+    })
+    .filter(Boolean);
 }
 
 function renderGenres(genres = []) {

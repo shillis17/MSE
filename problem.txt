@@ -1,0 +1,21 @@
+This repo assumes there are only two models (panns and clap), and that assumption is baked into multiple places across both the backend and frontend. The goal of this task is to remove those assumptions and make the app support any number of models defined in MODEL_CONFIGS.
+
+Start by scanning the entire codebase (both backend and frontend) for any hardcoded references to specific models or logic that assumes there are exactly two. This includes things like:
+
+explicitly referencing panns and clap
+rendering two fixed result sections or tables
+calling multiple model-specific functions manually instead of selecting dynamically
+
+All of that should be replaced with logic that works for any model listed in MODEL_CONFIGS.
+
+On the backend (app.py), update the /upload-search endpoint so it no longer runs both models every time. Instead, it should accept a selected model from the request and only run the corresponding search logic for that model. The selected model will always come from the frontend dropdown, which is populated directly from MODEL_CONFIGS, so you can assume it is valid and does not need defensive validation beyond basic handling.
+
+The backend should also continue exposing the available models (derived from MODEL_CONFIGS) so the frontend can stay in sync automatically.
+
+On the upload page, replace the current two-table layout with a single model selection workflow. Add a dropdown that lists all models from MODEL_CONFIGS. When the user uploads a file, include the selected model in the request and display a single results table for that model. The page should no longer display multiple models at once.
+
+On the compare page, remove the fixed "panns vs clap" behavior. Instead, add two independent dropdowns: one for the left table and one for the right table. Each dropdown should list all available models. The user should be able to select any combination of models, including the same model on both sides. Each table should fetch and display results based on its own selected model.
+
+There are already examples of model dropdowns in the site. Reuse that structure and behavior instead of duplicating it. All model dropdowns across the site must render identically and behave consistently when populated from the API
+
+Do not change the startup for the code as loading a model on request leads to a large wait for the user where they may believe the site is not working.

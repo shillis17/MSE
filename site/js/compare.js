@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const errorState = document.getElementById("errorState");
   const compareLayout = document.getElementById("compareLayout");
 
-  const topActions = document.getElementById("topActions");
   const entityLinks = document.getElementById("entityLinks");
   const songTitle = document.getElementById("songTitle");
   const songArtist = document.getElementById("songArtist");
@@ -17,12 +16,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const audioPlayer = document.getElementById("audioPlayer");
   const metaGrid = document.getElementById("metaGrid");
 
-  const pannsMeta = document.getElementById("pannsMeta");
-  const clapMeta = document.getElementById("clapMeta");
-  const pannsList = document.getElementById("pannsList");
-  const clapList = document.getElementById("clapList");
+  const leftModelSelect = document.getElementById("leftModelSelect");
+  const rightModelSelect = document.getElementById("rightModelSelect");
+  const leftMeta = document.getElementById("leftMeta");
+  const rightMeta = document.getElementById("rightMeta");
+  const leftList = document.getElementById("leftList");
+  const rightList = document.getElementById("rightList");
 
   let resizeSyncHandle = null;
+  let availableModels = [];
+  let leftModel = "panns";
+  let rightModel = "clap";
+  let currentTrack = null;
 
   function addMeta(label, value) {
     const item = document.createElement("div");
@@ -113,14 +118,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function syncCompareHeights() {
     if (window.innerWidth <= 980) {
-      [...pannsList.querySelectorAll(".card"), ...clapList.querySelectorAll(".card")].forEach((card) => {
+      [...leftList.querySelectorAll(".card"), ...rightList.querySelectorAll(".card")].forEach((card) => {
         card.style.height = "";
       });
       return;
     }
 
-    const leftCards = Array.from(pannsList.querySelectorAll(".card"));
-    const rightCards = Array.from(clapList.querySelectorAll(".card"));
+    const leftCards = Array.from(leftList.querySelectorAll(".card"));
+    const rightCards = Array.from(rightList.querySelectorAll(".card"));
     const maxLen = Math.max(leftCards.length, rightCards.length);
 
     [...leftCards, ...rightCards].forEach((card) => {
@@ -152,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderSharedTrack(track) {
     pageTitle.textContent = `${track.title} · Compare Models`;
-    pageLead.textContent = "Compare recommendation output from PANNs and CLAP for this track.";
+    pageLead.textContent = "Compare recommendation output from different similarity models for this track.";
 
     songTitle.textContent = track.title;
     songArtist.innerHTML = `<a href="artist.html?name=${encodeURIComponent(track.artist)}">${escapeHtml(track.artist)}</a>`;
@@ -162,11 +167,6 @@ document.addEventListener("DOMContentLoaded", () => {
       <a class="chip-link" href="artist.html?name=${encodeURIComponent(track.artist)}">Artist</a>
       ${track.album ? `<a class="chip-link" href="album.html?name=${encodeURIComponent(track.album)}">Album</a>` : ""}
       ${track.track_url ? `<a class="chip-link" href="${track.track_url}" target="_blank" rel="noreferrer">FMA Page</a>` : ""}
-    `;
-
-    topActions.innerHTML = `
-      <a class="button-secondary" href="song.html?track_id=${encodeURIComponent(track.track_id)}&model=panns">Open PANNs View</a>
-      <a class="button-secondary" href="song.html?track_id=${encodeURIComponent(track.track_id)}&model=clap">Open CLAP View</a>
     `;
 
     if (track.spectrogram_url) {
@@ -196,6 +196,77 @@ document.addEventListener("DOMContentLoaded", () => {
     resetSpectrogramPlayhead();
   }
 
+  async function loadAvailableModels() {
+    try {
+      const rootData = await loadRootInfo();
+      availableModels = normalizeModelOptions(rootData.available_models);
+
+      const defaultModel = rootData.default_model || availableModels[0]?.name || "panns";
+
+      leftModel = availableModels.find((modelOption) => modelOption.name === defaultModel)?.name || availableModels[0]?.name || "panns";
+      rightModel = availableModels.find((modelOption) => modelOption.name !== leftModel)?.name || leftModel;
+
+      leftModelSelect.innerHTML = availableModels.map((modelOption) => `
+        <option value="${escapeHtml(modelOption.name)}" ${modelOption.name === leftModel ? "selected" : ""}>
+          ${escapeHtml(modelOption.label)}
+        </option>
+      `).join("");
+
+      rightModelSelect.innerHTML = availableModels.map((modelOption) => `
+        <option value="${escapeHtml(modelOption.name)}" ${modelOption.name === rightModel ? "selected" : ""}>
+          ${escapeHtml(modelOption.label)}
+        </option>
+      `).join("");
+    } catch (error) {
+      console.error(error);
+      availableModels = ["panns", "clap"];
+      leftModel = "panns";
+      rightModel = "clap";
+
+      leftModelSelect.innerHTML = '<option value="panns" selected>PANNS</option><option value="clap">CLAP</option>';
+      rightModelSelect.innerHTML = '<option value="panns">PANNS</option><option value="clap" selected>CLAP</option>';
+    }
+  }
+
+  async function loadModelData(model) {
+    const data = await fetchJson(`${SITE_CONFIG.API_BASE}/tracks/${encodeURIComponent(trackId)}?model=${encodeURIComponent(model)}`);
+    return data;
+  }
+
+  async function refreshComparison() {
+    try {
+      const [leftData, rightData] = await Promise.all([
+        loadModelData(leftModel),
+        loadModelData(rightModel)
+      ]);
+
+      if (!currentTrack) {
+        currentTrack = normalizeTrack(leftData);
+        renderSharedTrack(currentTrack);
+      }
+
+      const leftRaw = Array.isArray(
+        leftData.recommendations || leftData.similar_tracks || leftData.results || leftData.neighbors
+      )
+        ? (leftData.recommendations || leftData.similar_tracks || leftData.results || leftData.neighbors).map(normalizeTrack)
+        : [];
+
+      const rightRaw = Array.isArray(
+        rightData.recommendations || rightData.similar_tracks || rightData.results || rightData.neighbors
+      )
+        ? (rightData.recommendations || rightData.similar_tracks || rightData.results || rightData.neighbors).map(normalizeTrack)
+        : [];
+
+      renderRecommendationColumn(leftList, leftMeta, leftRaw, currentTrack, leftModel);
+      renderRecommendationColumn(rightList, rightMeta, rightRaw, currentTrack, rightModel);
+
+      requestSyncCompareHeights();
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   async function loadComparePage() {
     if (!trackId) {
       loadingState.classList.add("hidden");
@@ -207,34 +278,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const [pannsData, clapData] = await Promise.all([
-        fetchJson(`${SITE_CONFIG.API_BASE}/tracks/${encodeURIComponent(trackId)}?model=panns`),
-        fetchJson(`${SITE_CONFIG.API_BASE}/tracks/${encodeURIComponent(trackId)}?model=clap`)
-      ]);
-
-      const sharedTrack = normalizeTrack(pannsData);
-
-      const pannsRaw = Array.isArray(
-        pannsData.recommendations || pannsData.similar_tracks || pannsData.results || pannsData.neighbors
-      )
-        ? (pannsData.recommendations || pannsData.similar_tracks || pannsData.results || pannsData.neighbors).map(normalizeTrack)
-        : [];
-
-      const clapRaw = Array.isArray(
-        clapData.recommendations || clapData.similar_tracks || clapData.results || clapData.neighbors
-      )
-        ? (clapData.recommendations || clapData.similar_tracks || clapData.results || clapData.neighbors).map(normalizeTrack)
-        : [];
-
-      renderSharedTrack(sharedTrack);
-      renderRecommendationColumn(pannsList, pannsMeta, pannsRaw, sharedTrack, "panns");
-      renderRecommendationColumn(clapList, clapMeta, clapRaw, sharedTrack, "clap");
+      await loadAvailableModels();
+      await refreshComparison();
 
       loadingState.classList.add("hidden");
       errorState.classList.add("hidden");
       compareLayout.classList.remove("hidden");
-
-      requestSyncCompareHeights();
     } catch (error) {
       console.error(error);
       loadingState.classList.add("hidden");
@@ -258,6 +307,16 @@ document.addEventListener("DOMContentLoaded", () => {
     spectrogramPlayhead.classList.remove("hidden");
   });
   audioPlayer.addEventListener("emptied", resetSpectrogramPlayhead);
+
+  leftModelSelect.addEventListener("change", async () => {
+    leftModel = leftModelSelect.value;
+    await refreshComparison();
+  });
+
+  rightModelSelect.addEventListener("change", async () => {
+    rightModel = rightModelSelect.value;
+    await refreshComparison();
+  });
 
   loadComparePage();
 });

@@ -39,19 +39,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function loadAvailableModels() {
     const rootData = await loadRootInfo();
-    const availableModels = Array.isArray(rootData.available_models)
-      ? rootData.available_models
-      : ["panns"];
+    const availableModels = normalizeModelOptions(rootData.available_models);
 
-    const defaultModel = rootData.default_model || availableModels[0] || "panns";
+    const defaultModel = rootData.default_model || availableModels[0]?.name || "panns";
 
-    if (!availableModels.includes(model)) {
+    if (!availableModels.some((modelOption) => modelOption.name === model)) {
       model = defaultModel;
     }
 
-    modelSelect.innerHTML = availableModels.map((modelName) => `
-      <option value="${escapeHtml(modelName)}" ${modelName === model ? "selected" : ""}>
-        ${escapeHtml(modelName.toUpperCase())}
+    modelSelect.innerHTML = availableModels.map((modelOption) => `
+      <option value="${escapeHtml(modelOption.name)}" ${modelOption.name === model ? "selected" : ""}>
+        ${escapeHtml(modelOption.label)}
       </option>
     `).join("");
 

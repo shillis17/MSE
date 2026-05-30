@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const previewPlayer = document.getElementById("previewPlayer");
   const startSlider = document.getElementById("startSlider");
   const timeReadout = document.getElementById("timeReadout");
+  const modelSelect = document.getElementById("modelSelect");
   const searchButton = document.getElementById("searchButton");
   const statusText = document.getElementById("statusText");
   const warningText = document.getElementById("warningText");
@@ -15,14 +16,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const querySegment = document.getElementById("querySegment");
 
   const resultsPanel = document.getElementById("resultsPanel");
-  const pannsMeta = document.getElementById("pannsMeta");
-  const clapMeta = document.getElementById("clapMeta");
-  const pannsList = document.getElementById("pannsList");
-  const clapList = document.getElementById("clapList");
+  const resultsHeading = document.getElementById("resultsHeading");
+  const resultsMeta = document.getElementById("resultsMeta");
+  const resultsList = document.getElementById("resultsList");
 
   let selectedFile = null;
   let previewUrl = null;
   let audioDuration = 0;
+  let selectedModel = "panns";
 
   function secondsToClock(seconds) {
     const total = Math.max(0, Math.floor(Number(seconds) || 0));
@@ -39,13 +40,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function clearResults() {
     resultsPanel.classList.add("hidden");
-    pannsList.innerHTML = "";
-    clapList.innerHTML = "";
-    pannsMeta.textContent = "";
-    clapMeta.textContent = "";
+    resultsList.innerHTML = "";
+    resultsMeta.textContent = "";
+    resultsHeading.textContent = "Results";
   }
 
-  function renderUploadResultCard(track, index, modelName) {
+  function renderUploadResultCard(track, index) {
     const t = normalizeTrack(track);
     const rankText = `#${index + 1}`;
     const scoreText = Number.isFinite(Number(t.score))
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return `
       <article class="card card-tight">
         <div class="similar-topline">
-          <a class="card-title" href="song.html?track_id=${encodeURIComponent(t.track_id)}&model=${encodeURIComponent(modelName)}">
+          <a class="card-title" href="song.html?track_id=${encodeURIComponent(t.track_id)}&model=${encodeURIComponent(selectedModel)}">
             ${escapeHtml(t.title)}
           </a>
           <span class="similar-rank">
@@ -72,12 +72,32 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  function renderColumn(targetEl, metaEl, modelName, results) {
-    metaEl.textContent = `${results.length} result(s)`;
+  function renderResults(results) {
+    resultsMeta.textContent = `${results.length} result(s)`;
 
-    targetEl.innerHTML = results.length
-      ? results.map((track, index) => renderUploadResultCard(track, index, modelName)).join("")
+    resultsList.innerHTML = results.length
+      ? results.map((track, index) => renderUploadResultCard(track, index)).join("")
       : `<div class="card-meta">No results returned.</div>`;
+  }
+
+  async function loadAvailableModels() {
+    try {
+      const rootData = await loadRootInfo();
+      const availableModels = normalizeModelOptions(rootData.available_models);
+
+      const defaultModel = rootData.default_model || availableModels[0]?.name || "panns";
+      selectedModel = defaultModel;
+
+      modelSelect.innerHTML = availableModels.map((modelOption) => `
+        <option value="${escapeHtml(modelOption.name)}" ${modelOption.name === selectedModel ? "selected" : ""}>
+          ${escapeHtml(modelOption.label)}
+        </option>
+      `).join("");
+    } catch (error) {
+      console.error(error);
+      modelSelect.innerHTML = '<option value="panns">PANNS</option>';
+      selectedModel = "panns";
+    }
   }
 
   async function loadHealth() {
@@ -142,6 +162,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   startSlider.addEventListener("input", updateTimeReadout);
 
+  modelSelect.addEventListener("change", () => {
+    selectedModel = modelSelect.value;
+  });
+
   searchButton.addEventListener("click", async () => {
     if (!selectedFile) return;
 
@@ -161,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("file", selectedFile);
       formData.append("start_seconds", String(startSeconds));
       formData.append("duration_seconds", String(CLIP_DURATION));
+      formData.append("model", selectedModel);
 
       const response = await fetch(`${SITE_CONFIG.API_BASE}/upload-search`, {
         method: "POST",
@@ -174,11 +199,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const data = await response.json();
 
-      const pannsResults = Array.isArray(data.results?.panns) ? data.results.panns.map(normalizeTrack) : [];
-      const clapResults = Array.isArray(data.results?.clap) ? data.results.clap.map(normalizeTrack) : [];
+      const results = Array.isArray(data.results) ? data.results.map(normalizeTrack) : [];
 
-      renderColumn(pannsList, pannsMeta, "panns", pannsResults);
-      renderColumn(clapList, clapMeta, "clap", clapResults);
+      resultsHeading.textContent = `Results (${selectedModel.toUpperCase()})`;
+      renderResults(results);
 
       resultsPanel.classList.remove("hidden");
       statusText.textContent = "Done.";
@@ -192,5 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  loadAvailableModels();
   loadHealth();
 });

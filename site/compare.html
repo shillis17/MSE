@@ -16,9 +16,9 @@
     <div class="container">
       <section class="page-header">
         <span class="eyebrow">Model Comparison</span>
-        <h1 id="pageTitle">Loading track comparison...</h1>
-        <p id="pageLead" class="lead">Compare recommendation output from multiple similarity models for the same track.</p>
-        <div id="topActions" class="top-actions"></div>
+        <h1 id="pageTitle">Compare Models</h1>
+        <p id="pageLead" class="lead">Compare recommendation output from different similarity models for the same track.</p>
+
       </section>
 
       <div id="loadingState" class="panel loading-state">Loading comparison data...</div>
@@ -52,23 +52,29 @@
           <article class="panel">
             <div class="compare-panel-header">
               <div>
-                <h2 class="compare-heading">PANNs</h2>
-                <div id="pannsMeta" class="compare-meta"></div>
+                <h2 class="compare-heading">Left Model</h2>
+                <div id="leftMeta" class="compare-meta"></div>
               </div>
-              <span class="compare-model-badge">PANNs</span>
+              <div class="model-picker">
+                <label for="leftModelSelect" class="meta-label">Model</label>
+                <select id="leftModelSelect" class="model-select"></select>
+              </div>
             </div>
-            <div id="pannsList" class="result-list"></div>
+            <div id="leftList" class="result-list"></div>
           </article>
 
           <article class="panel">
             <div class="compare-panel-header">
               <div>
-                <h2 class="compare-heading">CLAP</h2>
-                <div id="clapMeta" class="compare-meta"></div>
+                <h2 class="compare-heading">Right Model</h2>
+                <div id="rightMeta" class="compare-meta"></div>
               </div>
-              <span class="compare-model-badge">CLAP</span>
+              <div class="model-picker">
+                <label for="rightModelSelect" class="meta-label">Model</label>
+                <select id="rightModelSelect" class="model-select"></select>
+              </div>
             </div>
-            <div id="clapList" class="result-list"></div>
+            <div id="rightList" class="result-list"></div>
           </article>
         </section>
       </div>

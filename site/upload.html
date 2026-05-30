@@ -18,7 +18,7 @@
         <span class="eyebrow">Upload Audio</span>
         <h1>Find similar songs from your own clip</h1>
         <p class="lead">
-          Upload an audio file, choose a 30-second segment start, and compare the top matches returned by PANNs and CLAP.
+          Upload an audio file, choose a 30-second segment start, select a model, and find the top matches.
         </p>
       </section>
 
@@ -45,11 +45,17 @@
           </div>
         </div>
 
+        <div class="upload-row">
+          <label for="modelSelect" class="meta-label">Model</label>
+          <select id="modelSelect" class="model-select"></select>
+        </div>
+
         <div class="upload-inline">
           <button id="searchButton" class="button" type="button" disabled>Find similar songs</button>
           <span id="statusText" class="status-text">Choose a file to begin.</span>
         </div>
 
+        <div id="healthText" class="card-meta"></div>
         <div id="warningText" class="upload-warning hidden"></div>
       </section>
 
@@ -61,20 +67,10 @@
         </div>
       </section>
 
-      <section id="resultsPanel" class="hidden">
-        <div class="result-columns">
-          <article class="panel">
-            <h2>PANNs</h2>
-            <div id="pannsMeta" class="card-meta upload-model-meta"></div>
-            <div id="pannsList" class="result-list"></div>
-          </article>
-
-          <article class="panel">
-            <h2>CLAP</h2>
-            <div id="clapMeta" class="card-meta upload-model-meta"></div>
-            <div id="clapList" class="result-list"></div>
-          </article>
-        </div>
+      <section id="resultsPanel" class="panel hidden">
+        <h2 id="resultsHeading">Results</h2>
+        <div id="resultsMeta" class="card-meta upload-model-meta"></div>
+        <div id="resultsList" class="result-list"></div>
       </section>
     </div>
 
